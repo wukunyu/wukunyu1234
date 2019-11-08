@@ -1,4 +1,1 @@
-# wukunyu1234
-insert
-:wq
-
+#我的javascript知识总结分享
