@@ -1,0 +1,15 @@
+.todolist{
+  width: 550px;
+  margin: 130px auto;
+  background: #fff;
+}
+.controll{
+  width: 100%;
+  font-size: 100px;
+  text-align: center;
+  margin: 0 auto;
+  color: #333;
+}
+.complete{
+  text-decoration:line-through ;
+}
