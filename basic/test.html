@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <p style="width: 200px;height: 20000px;">123</p>
+    <script>
+        function debounce(fn, wait = 1000) {
+            if (fn.tt) {
+                clearTimeout(fn.tt)
+            }
+            fn.tt = setTimeout(() => {
+                fn()
+            }, wait)
+        }
+        function debounce_new(fn, wait = 1000) {
+            return function () {
+                clearTimeout(fn.id)
+                fn.id = setTimeout(() => {
+                    fn()
+                }, wait)
+            }
+        }
+        function throttle(fn, wait = 1000) {
+            let flag = true
+
+            return function () {
+                if (flag) {
+                    flag = false
+                    setTimeout(() => {
+                        flag = true
+                        fn()
+                    }, wait);
+                }
+            }
+        }
+        function clickFn() {
+            console.log('tt');
+        }
+        function scroll() {
+            console.log('scroll');
+
+        }
+        document.querySelector('p').addEventListener('click', function () {
+            debounce(clickFn, 1000)
+        }, false)
+
+        // document.addEventListener('scroll', function(){
+        //     throttle(scroll, 1000)()
+
+        // })
+
+        //原理：在连续触发某个函数时，让该函数隔一段时间执行一次
+        function throttle_new(fn, wait) {
+            wait = wait || 1000;
+            let flag = true;
+            return function () {
+                if (flag) {
+                    flag = false;
+                    setTimeout(() => {
+                        flag = true;
+                        fn.apply(this, arguments)//保证this指向 和 参数的传递
+                    }, wait)
+                }
+            }
+        }
+        function f() {
+            console.log(this)
+        }
+        window.onscroll = throttle(f, 1000)
+
+        function bubbleSort(arr) {
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < arr.length - i - 1; j++) {
+                    let tem
+                    if (arr[j] > arr[j + 1]) {
+                        tem = arr[j]
+                        arr[j] = arr[j + 1]
+                        arr[j + 1] = tem
+                    }
+                }
+            }
+            return arr
+        }
+
+        function quickSort(arr){
+            if(arr.length <= 1) return arr
+            let base = arr[0]
+            let left = [],middle=[base],right=[]
+            for(let i=1;i<arr.length;i++){
+                if(arr[i]===base){
+                    middle.push(arr[i])
+                }else if(arr[i]<base){
+                    left.push(arr[i])
+                }else{
+                    right.push(arr[i])
+                }
+            }
+           return quickSort(left).concat(middle, quickSort(right))
+        }
+    </script>
+</body>
+
+</html>

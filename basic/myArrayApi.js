@@ -78,13 +78,95 @@ Array.prototype.myFilter = function (cb, scope) {
     throw new TypeError('array is empty...')
   }
   for (let i = 0; i < len; i++) {
-    if(cb.call(scope, T[i], i, T )){
+    if (cb.call(scope, T[i], i, T)) {
       ret.push(T[i])
     }
   }
   return ret
 }
-let arr = []
+
+Array.prototype.myMap2 = (cb, scope) => {
+  if (typeof (cb) !== 'function') {
+    throw new TypeError('不是函数。。。')
+  }
+  if (Array.isArray(this)) {
+    throw new TypeError('不是数组')
+  }
+  if (this.length === 0) {
+    throw new Error('数组为空。。。')
+  }
+  let len = this.length, ret = []
+  console.log(this)
+  for (let i = 0; i < len; i++) {
+    ret.push(cb.call(scope, this[i], i, this))
+  }
+  return ret
+}
+Array.prototype.myFilter2 = function (cb, scope) {
+  if (typeof (cb) !== 'function') {
+    throw new TypeError('不是函数。。。')
+  }
+  if (!Array.isArray(this)) {
+    throw new TypeError('不是数组')
+  }
+  if (this.length === 0) {
+    throw new Error('数组为空。。。')
+  }
+  let len = this.length, ret = []
+  for (let i = 0; i < len; i++) {
+    if (cb.call(scope, this[i], i, this)) {
+      ret.push(this[i])
+    }
+  }
+  return ret
+}
+
+Array.prototype.myReduce2 = function (cb, initialValue) {
+  if (typeof (cb) !== 'function') {
+    throw new TypeError('不是函数。。。')
+  }
+  if (!Array.isArray(this)) {
+    throw new TypeError('不是数组')
+  }
+  if (this.length === 0) {
+    throw new Error('数组为空。。。')
+  }
+  let i = 0
+  if (!initialValue) {
+    initialValue = this[0]
+    i++
+  }
+  let accumulator = initialValue
+  for (; i < this.length; i++) {
+    accumulator = cb.call(undefined, accumulator, this[i], i, this)
+  }
+  return accumulator
+}
+let arr = [[1,2,3,[3,4,5]],1, 2, 3], res
+// res = arr.myMap2((item, index, arr) => {
+//   return `<p>${item}-${index}-${arr}</p>`
+//   console.log(item, index, arr)
+// })
+// res = arr.myFilter2((item, index, arr) => {
+//   return item >= 2
+// })
+function myflat(arr){
+  arr.myReduce2((accumulator, current, index ,arr)=>{
+    if(Array.isArray(accumulator)){
+      myflat(accumulator)
+    }else{
+      accumulator.push(current)
+    }
+    return accumulator
+  }, [])
+}
+res =  myflat(arr)
+// res = arr.myReduce2((accumulator, current, index, arr)=>{
+  
+//   return current + accumulator
+// })
+console.log(res) // [2,3]
+// let arr = []
 // ret = arr.myMap((item, index, a) => {
 //   return `<p>${item}-${index}-${a}</p>`
 // })
@@ -99,8 +181,8 @@ let arr = []
 //   return accumulator + currentValue
 // })
 // arr.myPush('wky')
-ret = arr.myFilter(item => item < 3)
-console.log(ret)
+// ret = arr.myFilter(item => item < 3)
+// console.log(ret)
 // console.log(flat(arr2))
 // console.log(ret)
 

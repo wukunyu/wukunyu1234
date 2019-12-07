@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        Array.prototype.myMap = function (cb, scope) {
+            // 判断类型
+            if (!Array.isArray(this)) {
+                throw new TypeError("不是数组。。。。")
+            }
+            if (typeof cb !== 'function') {
+                throw new TypeError(`${cb} is not a function`)
+            }
+            let T = Object(this) // arr
+            let len = T.length, ret = []
+
+            for (let i = 0; i < len; i++) {
+                ret.push(cb.call(scope, T[i], i, T))
+            }
+            return ret
+        }
+        Array.prototype.myMap2 = function (cb, scope) {
+            if (typeof cb !== 'function') {
+                throw new TypeError('不是函数。。。')
+            }
+            if (!Array.isArray(this)) {
+                throw new TypeError('不是数组')
+            }
+            if (this.length === 0) {
+                throw new Error('数组为空。。。')
+            }
+            let len = this.length, ret = []
+            console.log(this)
+            for (let i = 0; i < len; i++) {
+                ret.push(cb.call(scope, this[i], i, this))
+            }
+            return ret
+        }
+        // let arr = [1, 2, 3]
+
+        Array.prototype.myReduce2 = function (cb, initialValue) {
+            if (typeof (cb) !== 'function') {
+                throw new TypeError('不是函数。。。')
+            }
+            if (!Array.isArray(this)) {
+                throw new TypeError('不是数组')
+            }
+            if (this.length === 0) {
+                throw new Error('数组为空。。。')
+            }
+            let i = 0
+            if (!initialValue) {
+                initialValue = this[0]
+                i++
+            }
+            let accumulator = initialValue
+            for (; i < this.length; i++) {
+                accumulator = cb.call(undefined, accumulator, this[i], i, this)
+            }
+            return accumulator
+        }
+        let arr = [[1, 2, 3, [3, 4, 5]], 1, 2, 3], res
+        // res = arr.myMap2((item, index, arr) => {
+        //   return `<p>${item}-${index}-${arr}</p>`
+        //   console.log(item, index, arr)
+        // })
+        // res = arr.myFilter2((item, index, arr) => {
+        //   return item >= 2
+        // })
+        function myflat(arr) {
+          return  arr.reduce((accumulator, current, index, arr) => {
+                if (Array.isArray(current)) {
+                   return accumulator.concat(myflat(current))
+                } else {
+                return accumulator.concat(current)
+                }
+            }, [])
+        }
+        function myflat2(arr){
+            let ret = []
+            for(let i=0;i<arr.length;i++){
+                if(Array.isArray(arr[i])){
+                    ret.push(myflat2(arr[i]))
+                }else{
+                    ret.push(arr[i])
+                }
+            }
+            return ret
+        }
+        function myflat3(arr){
+            return JSON.parse(`[${JSON.stringify(arr).replace(/\[|\]/g, '')}]`)
+        }
+        function myflat4(arr){
+            return JSON.stringify(arr).replace(/\]|\]/g, '').split('')
+        }
+        res = myflat3(arr)
+        // res = arr.myReduce2((accumulator, current, index, arr)=>{
+
+        //   return current + accumulator
+        // })
+        console.log(res) // [2,3]
+        // let res = arr.myMap2((item, index, arr) => {
+        //     return `<p>${item}-${index}-${arr}</p>`
+        //     console.log(item, index, arr)
+        // })
+        // console.log(res)
+    </script>
+</body>
+
+</html>
